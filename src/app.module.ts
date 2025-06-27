@@ -11,6 +11,7 @@ import { LessonsModule } from './lessons/lessons.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/entities/user.entity';
+import { Course } from './courses/entities/course.entity';
 
 @Module({
   imports: [UsersModule, ResultsModule, AssignmentsModule, AuthModule, ModulesModule, CoursesModule, LessonsModule, 
@@ -27,7 +28,7 @@ import { User } from './users/entities/user.entity';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        entities: [User], 
+        entities: [User, Course], 
         synchronize: true,
       }),
     }),

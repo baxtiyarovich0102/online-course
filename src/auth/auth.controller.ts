@@ -29,6 +29,14 @@ export class AuthController {
     res.cookie('refresh_token', refresh_token, {
       httpOnly: true,
     });
+
+    res.cookie('token', access_token, {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 1000,
+    });
+
     return { access_token };
   }
 
