@@ -17,9 +17,16 @@ import { RolesGuard } from './auth/guards/roles.guard';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
-  imports: [UsersModule, ResultsModule, AssignmentsModule, AuthModule, ModulesModule, CoursesModule, LessonsModule, 
+  imports: [
+    UsersModule,
+    ResultsModule,
+    AssignmentsModule,
+    AuthModule,
+    ModulesModule,
+    CoursesModule,
+    LessonsModule,
     ConfigModule.forRoot({
-      isGlobal: true, 
+      isGlobal: true,
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
@@ -31,21 +38,12 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        entities: [User, Course], 
+        entities: [User, Course],
         synchronize: true,
       }),
     }),
   ],
   controllers: [AppController],
-  providers: [AppService,
-     {
-    provide: APP_GUARD,
-    useClass: JwtAuthGuard, 
-  },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
