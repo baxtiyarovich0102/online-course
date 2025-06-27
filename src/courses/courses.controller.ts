@@ -38,12 +38,14 @@ export class CoursesController {
     return this.coursesService.findOne(+id);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   @Roles('admin', 'teacher')
   update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return this.coursesService.update(+id, dto);
   }
 
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   @Roles('admin', 'teacher')
   remove(@Param('id') id: string) {
