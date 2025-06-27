@@ -38,4 +38,16 @@ export class UsersService {
   async findByEmail(email: string) {
     return this.repo.findOne({ where: { email } });
   }
+
+  async findOneWithEnrolledCourses(id: number) {
+  return await this.repo.findOne({
+    where: { id },
+    relations: ['enrolledCourses'],
+  });
+  }
+
+  async save(user: User) {
+  return this.repo.save(user);
+  }
+
 }

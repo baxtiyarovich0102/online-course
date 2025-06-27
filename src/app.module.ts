@@ -12,9 +12,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/entities/user.entity';
 import { Course } from './courses/entities/course.entity';
+import { CourseModule } from './modules/entities/module.entity';
 import { APP_GUARD } from '@nestjs/core';
 import { RolesGuard } from './auth/guards/roles.guard';
 import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
+import { Lesson } from './lessons/entities/lesson.entity';
 
 @Module({
   imports: [
@@ -38,7 +40,7 @@ import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        entities: [User, Course],
+        entities: [User, Course, Lesson, CourseModule],
         synchronize: true,
       }),
     }),

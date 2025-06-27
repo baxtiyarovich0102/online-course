@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateModuleDto } from './dto/create-module.dto';
 import { UpdateModuleDto } from './dto/update-module.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { CourseModule } from './entities/module.entity';
+import { Repository } from 'typeorm';
+import { Course } from 'src/courses/entities/course.entity';
 
 @Injectable()
 export class ModulesService {
-  create(createModuleDto: CreateModuleDto) {
-    return 'This action adds a new module';
+  constructor(
+    @InjectRepository(CourseModule)
+    private moduleRepo: Repository<CourseModule>,
+    @InjectRepository(Course)
+    private courseRepo: Repository<Course>,
+  ) {}
+
+  async create(dto: CreateModuleDto) {
+    const course = await this.courseRepo.findOne({ where: { id: dto.courseId } });
+    if (!course) throw new NotFoundException('Course not found');
+    return this.moduleRepo.save({ title: dto.title, course });
   }
 
   findAll() {
-    return `This action returns all modules`;
+    return this.moduleRepo.find({ relations: ['course'] });
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} module`;
+    return this.moduleRepo.findOne({ where: { id }, relations: ['course'] });
   }
 
-  update(id: number, updateModuleDto: UpdateModuleDto) {
-    return `This action updates a #${id} module`;
+  update(id: number, dto: CreateModuleDto) {
+    return this.moduleRepo.update(id, dto);
   }
 
   remove(id: number) {
-    return `This action removes a #${id} module`;
+    return this.moduleRepo.delete(id);
   }
 }
