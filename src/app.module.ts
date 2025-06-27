@@ -12,6 +12,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { User } from './users/entities/user.entity';
 import { Course } from './courses/entities/course.entity';
+import { APP_GUARD } from '@nestjs/core';
+import { RolesGuard } from './auth/guards/roles.guard';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.guard';
 
 @Module({
   imports: [UsersModule, ResultsModule, AssignmentsModule, AuthModule, ModulesModule, CoursesModule, LessonsModule, 
@@ -34,6 +37,15 @@ import { Course } from './courses/entities/course.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService,
+     {
+    provide: APP_GUARD,
+    useClass: JwtAuthGuard, 
+  },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}

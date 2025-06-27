@@ -5,6 +5,7 @@ import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Roles } from 'src/decorators/roles.decorator';
 
 @ApiTags('Courses')
 @Controller('courses')
@@ -17,6 +18,7 @@ export class CoursesController {
   }
 
   @Post()
+  @Roles('admin', 'teacher')
   create(@Body() dto: CreateCourseDto) {
     return this.coursesService.create(dto);
   }
@@ -27,11 +29,13 @@ export class CoursesController {
   }
 
   @Put(':id')
+  @Roles('admin', 'teacher')
   update(@Param('id') id: string, @Body() dto: UpdateCourseDto) {
     return this.coursesService.update(+id, dto);
   }
 
   @Delete(':id')
+  @Roles('admin', 'teacher')
   remove(@Param('id') id: string) {
     return this.coursesService.remove(+id);
   }
