@@ -25,9 +25,9 @@ export class UsersService {
   }
 
   async update(id: number, dto: UpdateUserDto) {
-    await this.findOne(id); // agar yo'q bo'lsa xatolik
+    await this.findOne(id);
     await this.repo.update(id, dto);
-    return this.findOne(id); // yangilangan ma'lumot
+    return this.findOne(id); 
   }
 
   async remove(id: number) {

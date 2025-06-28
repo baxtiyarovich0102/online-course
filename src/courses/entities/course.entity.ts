@@ -30,6 +30,6 @@ export class Course {
   modules: CourseModule[];
 
   @ManyToMany(() => User, user => user.enrolledCourses)
-enrolledUsers: User[];
+  enrolledUsers: User[];
 
 }
