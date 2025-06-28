@@ -1,26 +1,37 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Assignment } from './entities/assignment.entity';
+import { Repository } from 'typeorm';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
-import { UpdateAssignmentDto } from './dto/update-assignment.dto';
+import { CourseModule } from 'src/modules/entities/module.entity';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class AssignmentsService {
-  create(createAssignmentDto: CreateAssignmentDto) {
-    return 'This action adds a new assignment';
+  constructor(
+    @InjectRepository(Assignment)
+    private readonly repo: Repository<Assignment>,
+  ) {}
+
+  async create(dto: CreateAssignmentDto, user: User, module: CourseModule) {
+  if (!module) {
+    throw new NotFoundException('Modul topilmadi');
   }
 
-  findAll() {
-    return `This action returns all assignments`;
-  }
+  const assignment = this.repo.create({
+    content: dto.content,
+    user,
+    module,
+  });
 
-  findOne(id: number) {
-    return `This action returns a #${id} assignment`;
-  }
+  return this.repo.save(assignment);
+}
 
-  update(id: number, updateAssignmentDto: UpdateAssignmentDto) {
-    return `This action updates a #${id} assignment`;
-  }
 
-  remove(id: number) {
-    return `This action removes a #${id} assignment`;
+  findByUser(userId: number) {
+    return this.repo.find({
+      where: { user: { id: userId } },
+      relations: ['module'],
+    });
   }
 }

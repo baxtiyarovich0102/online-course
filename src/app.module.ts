@@ -40,8 +40,9 @@ import { Lesson } from './lessons/entities/lesson.entity';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        entities: [User, Course, Lesson, CourseModule],
+        entities: [User, Course, Lesson, CourseModule, AssignmentsModule],
         synchronize: true,
+        autoLoadEntities: true
       }),
     }),
   ],

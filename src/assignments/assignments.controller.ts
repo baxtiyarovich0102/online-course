@@ -1,34 +1,30 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Param, Body, UseGuards, Req, ParseIntPipe, NotFoundException } from '@nestjs/common';
 import { AssignmentsService } from './assignments.service';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
-import { UpdateAssignmentDto } from './dto/update-assignment.dto';
+import { ModulesService } from 'src/modules/modules.service';
+import { EnrollmentGuard } from 'src/auth/guards/enrollment.guard';
 
-@Controller('assignments')
+@Controller('modules/:moduleId/assignment')
+@UseGuards(JwtAuthGuard, EnrollmentGuard)
 export class AssignmentsController {
-  constructor(private readonly assignmentsService: AssignmentsService) {}
+  constructor(
+    private readonly assignmentsService: AssignmentsService,
+    private readonly modulesService: ModulesService,
+  ) {}
 
   @Post()
-  create(@Body() createAssignmentDto: CreateAssignmentDto) {
-    return this.assignmentsService.create(createAssignmentDto);
-  }
+  async submit(
+    @Param('moduleId', ParseIntPipe) moduleId: number,
+    @Body() dto: CreateAssignmentDto,
+    @Req() req,
+  ) {
+    const user = req.user;
+    const module = await this.modulesService.findOne(moduleId);
 
-  @Get()
-  findAll() {
-    return this.assignmentsService.findAll();
+    if (!module) {
+    throw new NotFoundException('Modul topilmadi');
   }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.assignmentsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAssignmentDto: UpdateAssignmentDto) {
-    return this.assignmentsService.update(+id, updateAssignmentDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.assignmentsService.remove(+id);
+    return this.assignmentsService.create(dto, user, module);
   }
 }

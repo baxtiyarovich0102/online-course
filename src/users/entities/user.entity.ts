@@ -1,3 +1,4 @@
+import { Assignment } from "src/assignments/entities/assignment.entity";
 import { Course } from "src/courses/entities/course.entity";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
@@ -21,6 +22,9 @@ export class User {
 
     @OneToMany(() => Course, (course) => course.teacher)
     teacherCourses: Course[];
+
+    @OneToMany(() => Assignment, assignment => assignment.user)
+    assignments: Assignment[];
 
     @ManyToMany(() => Course, course => course.enrolledUsers)
     @JoinTable()
