@@ -14,9 +14,9 @@ export class CreateCourseDto {
   @IsNumber()
   price: number;
 
-  @ApiProperty({ example: 'Men' })
-  @IsString()
-  teacher: string;
+  @ApiProperty({ example: 1 }) 
+  @IsNumber()
+  teacherId: number;
 
   @ApiProperty({ example: 'Backend' })
   @IsString()

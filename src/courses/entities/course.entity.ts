@@ -1,5 +1,5 @@
 import { User } from 'src/users/entities/user.entity';
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { CourseModule } from 'src/modules/entities/module.entity';
 
 
@@ -18,13 +18,14 @@ export class Course {
   price: number;
 
   @Column()
-  teacher: string;
-
-  @Column()
   category: string;
 
   @Column()
   level: string;
+
+  @ManyToOne(() => User, (user) => user.teacherCourses)
+  @JoinColumn({ name: 'teacherId' }) // bu optional, lekin ustun nomini aniq ko‘rsatadi
+  teacher: User;
 
   @OneToMany(() => CourseModule, module => module.course)
   modules: CourseModule[];

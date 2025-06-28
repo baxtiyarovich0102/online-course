@@ -4,18 +4,26 @@ import { Repository } from 'typeorm';
 import { Course } from './entities/course.entity';
 import { CreateCourseDto } from './dto/create-course.dto';
 import { UpdateCourseDto } from './dto/update-course.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class CoursesService {
   constructor(
     @InjectRepository(Course)
     private readonly repo: Repository<Course>,
+    private readonly usersService: UsersService,
   ) {}
 
-  create(dto: CreateCourseDto) {
-    const course = this.repo.create(dto);
-    return this.repo.save(course);
-  }
+ async create(dto: CreateCourseDto) {
+  const teacher = await this.usersService.findOne(dto.teacherId); 
+
+  const course = this.repo.create({
+    ...dto,
+    teacher, 
+  });
+
+  return this.repo.save(course);
+}
 
   findAll() {
     return this.repo.find();
