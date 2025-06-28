@@ -25,7 +25,7 @@ export class CoursesService {
   return this.repo.save(course);
 }
 
-  findAll() {
+  async findAll() {
     return this.repo.find();
   }
 

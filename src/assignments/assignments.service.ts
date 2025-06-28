@@ -24,12 +24,12 @@ export class AssignmentsService {
     module,
   });
 
-  return this.repo.save(assignment);
+  return await this.repo.save(assignment);
 }
 
 
-  findByUser(userId: number) {
-    return this.repo.find({
+  async findByUser(userId: number) {
+    return await this.repo.find({
       where: { user: { id: userId } },
       relations: ['module'],
     });

@@ -21,19 +21,19 @@ export class ModulesService {
     return this.moduleRepo.save({ title: dto.title, course });
   }
 
-  findAll() {
+  async findAll() {
     return this.moduleRepo.find({ relations: ['course'] });
   }
 
-  findOne(id: number) {
+  async findOne(id: number) {
     return this.moduleRepo.findOne({ where: { id }, relations: ['course'] });
   }
 
-  update(id: number, dto: CreateModuleDto) {
+  async update(id: number, dto: CreateModuleDto) {
     return this.moduleRepo.update(id, dto);
   }
 
-  remove(id: number) {
+  async remove(id: number) {
     return this.moduleRepo.delete(id);
   }
 
