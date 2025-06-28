@@ -36,4 +36,17 @@ export class ModulesService {
   remove(id: number) {
     return this.moduleRepo.delete(id);
   }
+
+  async findByCourseId(courseId: number) {
+  const course = await this.courseRepo.findOne({ where: { id: courseId } });
+  if (!course) {
+    throw new NotFoundException('Course not found');
+  }
+
+  return this.moduleRepo.find({
+    where: { course: { id: courseId } },
+    relations: ['course'],
+  });
+}
+
 }

@@ -5,6 +5,7 @@ import { UpdateLessonDto } from './dto/update-lesson.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
+import { EnrollmentGuard } from 'src/auth/guards/enrollment.guard';
 
 @Controller('lessons')
 export class LessonsController {
@@ -40,4 +41,6 @@ export class LessonsController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.lessonsService.remove(id);
   }
+
+
 }

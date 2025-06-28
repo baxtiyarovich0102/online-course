@@ -36,4 +36,12 @@ export class LessonsService {
   remove(id: number) {
     return this.lessonRepo.delete(id);
   }
+
+  async findByModuleId(moduleId: number) {
+  return this.lessonRepo.find({
+    where: { module: { id: moduleId } },
+    relations: ['module'],
+  });
+}
+
 }

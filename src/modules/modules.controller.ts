@@ -5,10 +5,12 @@ import { UpdateModuleDto } from './dto/update-module.dto';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from 'src/decorators/roles.decorator';
+import { EnrollmentGuard } from 'src/auth/guards/enrollment.guard';
+import { LessonsService } from 'src/lessons/lessons.service';
 
 @Controller('modules')
 export class ModulesController {
-  constructor(private readonly modulesService: ModulesService) {}
+  constructor(private readonly modulesService: ModulesService, private readonly lessonsService: LessonsService,) {}
 
   @Post()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -40,4 +42,11 @@ export class ModulesController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.modulesService.remove(id);
   }
+
+   @UseGuards(JwtAuthGuard, EnrollmentGuard)
+  @Get(':moduleId/lessons')
+  findLessonsByModule(@Param('moduleId', ParseIntPipe) moduleId: number) {
+    return this.lessonsService.findByModuleId(moduleId);
+  }
+
 }

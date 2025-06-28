@@ -9,6 +9,7 @@ import {
   UseGuards,
   Req,
   NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { CoursesService } from './courses.service';
 import { CreateCourseDto } from './dto/create-course.dto';
@@ -18,11 +19,13 @@ import { Roles } from 'src/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { UsersService } from 'src/users/users.service';
+import { ModulesService } from 'src/modules/modules.service';
+import { EnrollmentGuard } from 'src/auth/guards/enrollment.guard';
 
 @ApiTags('Courses')
 @Controller('courses')
 export class CoursesController {
-  constructor(private readonly coursesService: CoursesService, private readonly usersService: UsersService,) {}
+  constructor(private readonly coursesService: CoursesService, private readonly usersService: UsersService, private readonly modulesService: ModulesService,) {}
 
   @Get()
   findAll() {
@@ -75,5 +78,12 @@ export class CoursesController {
 
     return { message: 'Successfully enrolled' };
   }
+
+  @UseGuards(JwtAuthGuard, EnrollmentGuard)
+  @Get(':courseId/modules')
+  getModulesByCourse(@Param('courseId', ParseIntPipe) courseId: number) {
+  return this.modulesService.findByCourseId(courseId);
+}
+
 
 }
