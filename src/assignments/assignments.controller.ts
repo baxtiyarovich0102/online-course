@@ -31,5 +31,13 @@ export class AssignmentsController {
     const userId = req.user.id;
     return this.assignmentsService.findByUser(userId);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/results')
+  getMyResults(@Req() req) {
+  const userId = req.user.id;
+  return this.assignmentsService.getResults(userId);
+}
+
 }
 

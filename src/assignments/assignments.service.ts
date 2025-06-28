@@ -34,4 +34,17 @@ export class AssignmentsService {
       relations: ['module'],
     });
   }
+
+  async getResults(userId: number) {
+  return this.repo.find({
+    where: {
+      user: { id: userId },
+      isGraded: true,
+    },
+    relations: ['module'],
+    select: ['id', 'score', 'isGraded', 'module'], 
+  });
+}
+
+
 }
