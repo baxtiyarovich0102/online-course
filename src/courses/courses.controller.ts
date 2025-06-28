@@ -65,7 +65,6 @@ export class CoursesController {
       throw new NotFoundException('User or course not found');
     }
 
-    // Agar allaqachon yozilgan bo‘lsa qaytib yozmaslik
     const alreadyEnrolled = user.enrolledCourses.some(c => c.id === course.id);
     if (alreadyEnrolled) {
       return { message: 'You are already enrolled in this course' };
