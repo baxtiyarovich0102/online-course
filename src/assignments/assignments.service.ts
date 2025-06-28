@@ -44,7 +44,16 @@ export class AssignmentsService {
     relations: ['module'],
     select: ['id', 'score', 'isGraded', 'module'], 
   });
-}
+  }
+
+  async gradeAssignment(id: number, score: number) {
+  const assignment = await this.repo.findOne({ where: { id }, relations: ['module'] });
+  if (!assignment) throw new NotFoundException('Assignment topilmadi');
+
+  assignment.score = score;
+  assignment.isGraded = true;
+  return this.repo.save(assignment);
+  }
 
 
 }

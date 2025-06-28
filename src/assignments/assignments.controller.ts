@@ -1,9 +1,10 @@
-import { Controller, Post, Param, Body, UseGuards, Req, ParseIntPipe, NotFoundException, Get } from '@nestjs/common';
+import { Controller, Post, Param, Body, UseGuards, Req, ParseIntPipe, NotFoundException, Get, Patch, ForbiddenException } from '@nestjs/common';
 import { AssignmentsService } from './assignments.service';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CreateAssignmentDto } from './dto/create-assignment.dto';
 import { ModulesService } from 'src/modules/modules.service';
 import { EnrollmentGuard } from 'src/auth/guards/enrollment.guard';
+import { GradeAssignmentDto } from './dto/grade-assignment.dto';
 
 @Controller('assignments')
 @UseGuards(JwtAuthGuard)
@@ -37,7 +38,21 @@ export class AssignmentsController {
   getMyResults(@Req() req) {
   const userId = req.user.id;
   return this.assignmentsService.getResults(userId);
-}
+ }
+
+ @Patch(':id/grade')
+  async grade(
+  @Param('id', ParseIntPipe) id: number,
+  @Body() dto: GradeAssignmentDto,
+  @Req() req,
+  ) {
+  const user = req.user;
+  if (user.role !== 'teacher' && user.role !== 'admin') {
+    throw new ForbiddenException('Faqat teacher yoki admin baholashi mumkin');
+  }
+
+  return this.assignmentsService.gradeAssignment(id, dto.score);
+  }
 
 }
 
